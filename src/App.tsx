@@ -43,7 +43,7 @@ function App() {
       setExpenses(data.expenses);
       setError(null);
     } catch (err) {
-      setError('Failed to load data. Make sure the server is running.');
+      setError('Failed to load data. The backend server might be waking up (free tier). Please wait 30 seconds and refresh the page.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -175,10 +175,17 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        <div className="text-center max-w-md">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading data...</p>
+          <p className="text-gray-800 font-semibold mb-2">Loading your data...</p>
+          <p className="text-sm text-gray-600 mb-4">
+            If this is your first visit in a while, the server might be waking up. This can take up to 30 seconds.
+          </p>
+          <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
+            <div className="animate-pulse">⚡</div>
+            <span>Free tier backend starting up...</span>
+          </div>
         </div>
       </div>
     );
@@ -187,24 +194,33 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <header className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <Wallet className="w-10 h-10 text-indigo-600" />
-            <h1 className="text-4xl font-bold text-gray-800">Contributions Tracker</h1>
+        <header className="mb-6 md:mb-8">
+          <div className="flex items-center gap-2 md:gap-3 mb-2">
+            <Wallet className="w-8 h-8 md:w-10 md:h-10 text-indigo-600" />
+            <h1 className="text-2xl md:text-4xl font-bold text-gray-800">Contributions Tracker</h1>
           </div>
-          <p className="text-gray-600 ml-13">Track money in, promises, and expenses</p>
+          <p className="text-sm md:text-base text-gray-600 ml-10 md:ml-13">Track money in, promises, and expenses</p>
         </header>
 
         {error && (
           <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded">
-            <div className="flex items-center">
+            <div className="flex items-start">
               <div className="flex-shrink-0">
                 <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                 </svg>
               </div>
-              <div className="ml-3">
-                <p className="text-sm text-red-700">{error}</p>
+              <div className="ml-3 flex-1">
+                <p className="text-sm text-red-700 mb-2">{error}</p>
+                <button
+                  onClick={() => {
+                    setError(null);
+                    loadData();
+                  }}
+                  className="text-sm bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition-colors"
+                >
+                  Retry Now
+                </button>
               </div>
               <button
                 onClick={() => setError(null)}
@@ -243,39 +259,39 @@ function App() {
           expenses={expenses}
         />
 
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <div className="flex gap-2 mb-6 border-b">
+        <div className="bg-white rounded-lg shadow-lg p-4 md:p-6 mb-4 md:mb-6">
+          <div className="flex gap-1 md:gap-2 mb-4 md:mb-6 border-b overflow-x-auto">
             <button
               onClick={() => setActiveTab('contributions')}
-              className={`px-6 py-3 font-semibold transition-colors flex items-center gap-2 ${
+              className={`px-3 md:px-6 py-2 md:py-3 font-semibold transition-colors flex items-center gap-1 md:gap-2 text-sm md:text-base whitespace-nowrap ${
                 activeTab === 'contributions'
                   ? 'text-green-600 border-b-2 border-green-600'
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              <TrendingUp className="w-5 h-5" />
+              <TrendingUp className="w-4 h-4 md:w-5 md:h-5" />
               Money In
             </button>
             <button
               onClick={() => setActiveTab('promises')}
-              className={`px-6 py-3 font-semibold transition-colors flex items-center gap-2 ${
+              className={`px-3 md:px-6 py-2 md:py-3 font-semibold transition-colors flex items-center gap-1 md:gap-2 text-sm md:text-base whitespace-nowrap ${
                 activeTab === 'promises'
                   ? 'text-blue-600 border-b-2 border-blue-600'
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              <DollarSign className="w-5 h-5" />
+              <DollarSign className="w-4 h-4 md:w-5 md:h-5" />
               Promises
             </button>
             <button
               onClick={() => setActiveTab('expenses')}
-              className={`px-6 py-3 font-semibold transition-colors flex items-center gap-2 ${
+              className={`px-3 md:px-6 py-2 md:py-3 font-semibold transition-colors flex items-center gap-1 md:gap-2 text-sm md:text-base whitespace-nowrap ${
                 activeTab === 'expenses'
                   ? 'text-red-600 border-b-2 border-red-600'
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              <TrendingDown className="w-5 h-5" />
+              <TrendingDown className="w-4 h-4 md:w-5 md:h-5" />
               Expenses
             </button>
           </div>

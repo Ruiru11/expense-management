@@ -42,23 +42,23 @@ export default function PasswordModal({ isOpen, onClose, onConfirm, title, messa
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
-        <div className="flex items-center justify-between p-6 border-b">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+        <div className="flex items-center justify-between p-4 md:p-6 border-b">
           <div className="flex items-center gap-2">
-            <Lock className="w-5 h-5 text-red-600" />
-            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+            <Lock className="w-4 h-4 md:w-5 md:h-5 text-red-600" />
+            <h3 className="text-base md:text-lg font-semibold text-gray-900">{title}</h3>
           </div>
           <button
             onClick={handleClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-gray-400 hover:text-gray-600 transition-colors p-1"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6">
-          <p className="text-gray-600 mb-4">{message}</p>
+        <form onSubmit={handleSubmit} className="p-4 md:p-6">
+          <p className="text-sm md:text-base text-gray-600 mb-4">{message}</p>
           
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
@@ -85,18 +85,18 @@ export default function PasswordModal({ isOpen, onClose, onConfirm, title, messa
             />
           </div>
 
-          <div className="flex gap-3 justify-end">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 sm:justify-end">
             <button
               type="button"
               onClick={handleClose}
-              className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              className="w-full sm:w-auto px-4 py-3 sm:py-2 text-sm md:text-base text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
               disabled={isSubmitting}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto px-4 py-3 sm:py-2 text-sm md:text-base bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Processing...' : 'Confirm Delete'}

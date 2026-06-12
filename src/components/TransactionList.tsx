@@ -81,20 +81,20 @@ export default function TransactionList({ items, type, onDelete, onEdit }: Trans
                 <p className="mt-2 text-sm text-gray-600 italic">{item.notes}</p>
               )}
             </div>
-            <div className="flex gap-2 ml-4">
+            <div className="flex gap-2 md:ml-4">
               <button
                 onClick={() => onEdit(item.id)}
-                className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors"
+                className="p-2 md:p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors touch-manipulation"
                 title="Edit"
               >
-                <Edit className="w-5 h-5" />
+                <Edit className="w-5 h-5 md:w-5 md:h-5" />
               </button>
               <button
                 onClick={() => onDelete(item.id)}
-                className="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
+                className="p-2 md:p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors touch-manipulation"
                 title="Delete"
               >
-                <Trash2 className="w-5 h-5" />
+                <Trash2 className="w-5 h-5 md:w-5 md:h-5" />
               </button>
             </div>
           </div>

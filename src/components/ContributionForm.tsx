@@ -30,9 +30,9 @@ export default function ContributionForm({ onAdd }: ContributionFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-green-50 p-6 rounded-lg mb-6">
-      <h3 className="text-lg font-semibold text-green-800 mb-4">Add Money Received</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <form onSubmit={handleSubmit} className="bg-green-50 p-4 md:p-6 rounded-lg mb-4 md:mb-6">
+      <h3 className="text-base md:text-lg font-semibold text-green-800 mb-3 md:mb-4">Add Money Received</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Contributor Name
@@ -87,9 +87,9 @@ export default function ContributionForm({ onAdd }: ContributionFormProps) {
       </div>
       <button
         type="submit"
-        className="mt-4 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 font-medium"
+        className="mt-3 md:mt-4 w-full md:w-auto bg-green-600 text-white px-6 py-3 md:py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2 font-medium text-sm md:text-base"
       >
-        <Plus className="w-5 h-5" />
+        <Plus className="w-4 h-4 md:w-5 md:h-5" />
         Add Contribution
       </button>
     </form>

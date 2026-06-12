@@ -13,6 +13,8 @@ A modern full-stack web application for tracking financial contributions, promis
 - **Password Protected Edit & Delete**: All edit and delete operations require admin password authentication
 - **Edit Functionality**: Modify existing entries with password protection
 - **Modern UI**: Beautiful, responsive interface with color-coded sections
+- **Mobile Responsive**: Fully optimized for phones, tablets, and desktops
+- **Smart Loading**: Helpful loading states that explain free tier backend wake-up times (up to 30 seconds)
 
 ## Architecture
 
