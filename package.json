@@ -8,9 +8,9 @@
     "build": "tsc && vite build",
     "build:backend": "echo 'Backend build complete'",
     "preview": "vite preview",
-    "server": "node server/server.js",
+    "server": "node server/server-mongodb.js",
     "dev:all": "concurrently \"npm run server\" \"npm run dev\"",
-    "start": "node server/server.js"
+    "start": "node server/server-mongodb.js"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -18,7 +18,8 @@
     "lucide-react": "^0.294.0",
     "date-fns": "^2.30.0",
     "express": "^4.18.2",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "mongodb": "^6.3.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

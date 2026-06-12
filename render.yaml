@@ -14,7 +14,5 @@ services:
         sync: false
       - key: FRONTEND_URL
         sync: false
-    disk:
-      name: data
-      mountPath: /data
-      sizeGB: 1
+      - key: MONGODB_URI
+        sync: false
