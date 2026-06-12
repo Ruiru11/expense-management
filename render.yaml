@@ -3,7 +3,7 @@ services:
   - type: web
     name: contributions-tracker-api
     runtime: node
-    buildCommand: npm install
+    buildCommand: npm install --production=false
     startCommand: npm start
     envVars:
       - key: PORT

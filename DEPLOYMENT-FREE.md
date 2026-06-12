@@ -50,7 +50,7 @@ This guide shows you how to deploy your Contributions Tracker **100% FREE** usin
 - **Branch:** `main` (or your default branch)
 - **Root Directory:** Leave empty
 - **Runtime:** Node
-- **Build Command:** `npm install`
+- **Build Command:** Leave empty (Render will auto-detect)
 - **Start Command:** `npm start`
 
 **Instance Type:**

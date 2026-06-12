@@ -19,7 +19,7 @@
 
 2. **Configure**
    - **Name:** `contributions-tracker-api`
-   - **Build Command:** `npm install`
+   - **Build Command:** Leave empty or use `npm install --production=false`
    - **Start Command:** `npm start`
    - Click **"Advanced"** → Add Disk:
      - **Name:** `data`
