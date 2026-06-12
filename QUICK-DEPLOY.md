@@ -42,11 +42,6 @@
    - Update `FRONTEND_URL` to your Vercel URL
    - Save (auto-redeploys)
 
-## Test
-
-- Visit your Vercel URL
-- Add a contribution (no password needed)
-- Try to delete (password: `11/06/2026:22:00`)
 
 ## Done! 🎉
 

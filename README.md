@@ -140,15 +140,16 @@ export const ADMIN_PASSWORD = '11/06/2026:22:00';
 
 ## Deployment
 
-This app is configured for deployment on **Vercel (frontend) + Railway (backend)**.
+This app is configured for **100% FREE deployment** on **Vercel + Render** (no credit card required).
 
-### Quick Deploy
+### 🆓 Free Deployment (Recommended)
 
-See [QUICK-DEPLOY.md](./QUICK-DEPLOY.md) for a 10-minute deployment checklist.
+- **Quick Guide:** [QUICK-DEPLOY-FREE.md](./QUICK-DEPLOY-FREE.md) - 10-minute checklist
+- **Full Guide:** [DEPLOYMENT-FREE.md](./DEPLOYMENT-FREE.md) - Detailed step-by-step
 
-### Full Deployment Guide
+### Alternative: Vercel + Railway
 
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed step-by-step instructions.
+See [QUICK-DEPLOY.md](./QUICK-DEPLOY.md) and [DEPLOYMENT.md](./DEPLOYMENT.md) for Railway deployment (requires payment).
 
 ### Environment Variables
 
