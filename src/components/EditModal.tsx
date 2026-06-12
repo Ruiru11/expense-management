@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { X, Lock, AlertCircle } from 'lucide-react';
-import { Contribution, Promise, Expense } from '../types';
+import { Contribution, Promise as PromiseType, Expense } from '../types';
 
 interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (data: any, password: string) => Promise<void>;
-  item: Contribution | Promise | Expense | null;
+  item: Contribution | PromiseType | Expense | null;
   type: 'contribution' | 'promise' | 'expense';
 }
 
