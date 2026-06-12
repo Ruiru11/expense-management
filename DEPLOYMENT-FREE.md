@@ -62,7 +62,7 @@ This guide shows you how to deploy your Contributions Tracker **100% FREE** usin
 2. Click **"Add Disk"**
 3. Configure:
    - **Name:** `data`
-   - **Mount Path:** `/opt/render/project/src/server`
+   - **Mount Path:** `/data`
    - **Size:** 1 GB (free tier allows up to 1GB)
 
 This ensures your `data.json` file persists between deployments!

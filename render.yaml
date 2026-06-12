@@ -16,5 +16,5 @@ services:
         sync: false
     disk:
       name: data
-      mountPath: /opt/render/project/src/server
+      mountPath: /data
       sizeGB: 1

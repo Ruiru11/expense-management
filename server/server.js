@@ -18,7 +18,10 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const DATA_FILE = path.join(__dirname, 'data.json');
+// Use persistent disk in production, local directory in development
+const DATA_FILE = process.env.NODE_ENV === 'production' 
+  ? '/data/data.json' 
+  : path.join(__dirname, 'data.json');
 
 const corsOptions = {
   origin: process.env.FRONTEND_URL || 'http://localhost:5173',

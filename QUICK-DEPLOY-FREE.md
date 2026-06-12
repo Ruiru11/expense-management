@@ -23,7 +23,7 @@
    - **Start Command:** `npm start`
    - Click **"Advanced"** → Add Disk:
      - **Name:** `data`
-     - **Mount Path:** `/opt/render/project/src/server`
+     - **Mount Path:** `/data`
      - **Size:** 1 GB
 
 3. **Environment Variables**
