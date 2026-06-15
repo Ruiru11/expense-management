@@ -28,4 +28,12 @@ export interface Budget {
   amount: number;
 }
 
-export type TransactionType = 'contribution' | 'promise' | 'expense';
+export interface BudgetItem {
+  id: string;
+  description: string;
+  amount: number;
+  category?: string;
+  notes?: string;
+}
+
+export type TransactionType = 'contribution' | 'promise' | 'expense' | 'budgetItem';

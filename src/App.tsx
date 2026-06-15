@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { DollarSign, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
-import { Contribution, Promise, Expense, Budget } from './types';
+import { Contribution, Promise, Expense, Budget, BudgetItem } from './types';
 import ContributionForm from './components/ContributionForm';
 import PromiseForm from './components/PromiseForm';
 import ExpenseForm from './components/ExpenseForm';
+import BudgetItemForm from './components/BudgetItemForm';
 import TransactionList from './components/TransactionList';
 import Summary from './components/Summary';
 import BudgetCard from './components/BudgetCard';
@@ -15,22 +16,24 @@ function App() {
   const [contributions, setContributions] = useState<Contribution[]>([]);
   const [promises, setPromises] = useState<Promise[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [budgetItems, setBudgetItems] = useState<BudgetItem[]>([]);
   const [budget, setBudget] = useState<Budget>({ amount: 330766 });
-  const [activeTab, setActiveTab] = useState<'contributions' | 'promises' | 'expenses'>('contributions');
+  const [activeTab, setActiveTab] = useState<'contributions' | 'promises' | 'expenses' | 'budgetItems'>('contributions');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [passwordModal, setPasswordModal] = useState<{
     isOpen: boolean;
-    type: 'contribution' | 'promise' | 'expense' | null;
+    type: 'contribution' | 'promise' | 'expense' | 'budgetItem' | 'budget' | null;
     id: string | null;
     itemName: string;
   }>({ isOpen: false, type: null, id: null, itemName: '' });
   const [editModal, setEditModal] = useState<{
     isOpen: boolean;
-    type: 'contribution' | 'promise' | 'expense' | null;
-    item: Contribution | Promise | Expense | null;
+    type: 'contribution' | 'promise' | 'expense' | 'budgetItem' | null;
+    item: Contribution | Promise | Expense | BudgetItem | null;
   }>({ isOpen: false, type: null, item: null });
+  const [budgetEditValue, setBudgetEditValue] = useState<string>('');
 
   useEffect(() => {
     loadData();
@@ -43,6 +46,7 @@ function App() {
       setContributions(data.contributions);
       setPromises(data.promises);
       setExpenses(data.expenses);
+      setBudgetItems(data.budgetItems);
       setBudget(data.budget);
       setError(null);
     } catch (err) {
@@ -83,6 +87,16 @@ function App() {
     }
   };
 
+  const addBudgetItem = async (budgetItem: Omit<BudgetItem, 'id'>) => {
+    try {
+      const newBudgetItem = await api.addBudgetItem(budgetItem);
+      setBudgetItems([...budgetItems, newBudgetItem]);
+    } catch (err) {
+      setError('Failed to add budget item');
+      console.error(err);
+    }
+  };
+
   const deleteContribution = (id: string) => {
     const item = contributions.find(c => c.id === id);
     setPasswordModal({
@@ -113,6 +127,16 @@ function App() {
     });
   };
 
+  const deleteBudgetItem = (id: string) => {
+    const item = budgetItems.find(b => b.id === id);
+    setPasswordModal({
+      isOpen: true,
+      type: 'budgetItem',
+      id,
+      itemName: item?.description || 'this budget item'
+    });
+  };
+
   const handlePasswordConfirm = async (password: string) => {
     if (!passwordModal.id || !passwordModal.type) return;
 
@@ -128,6 +152,14 @@ function App() {
       await api.deleteExpense(passwordModal.id, password);
       setExpenses(expenses.filter(e => e.id !== passwordModal.id));
       setSuccessMessage('Expense deleted successfully!');
+    } else if (passwordModal.type === 'budgetItem') {
+      await api.deleteBudgetItem(passwordModal.id, password);
+      setBudgetItems(budgetItems.filter(b => b.id !== passwordModal.id));
+      setSuccessMessage('Budget item deleted successfully!');
+    } else if (passwordModal.type === 'budget') {
+      await api.updateBudget(parseFloat(budgetEditValue), password);
+      setBudget({ amount: parseFloat(budgetEditValue) });
+      setSuccessMessage('Budget updated successfully!');
     }
     setPasswordModal({ isOpen: false, type: null, id: null, itemName: '' });
     setError(null);
@@ -155,6 +187,23 @@ function App() {
     }
   };
 
+  const editBudgetItem = (id: string) => {
+    const item = budgetItems.find(b => b.id === id);
+    if (item) {
+      setEditModal({ isOpen: true, type: 'budgetItem', item });
+    }
+  };
+
+  const editBudgetAmount = () => {
+    setBudgetEditValue(budget.amount.toString());
+    setPasswordModal({
+      isOpen: true,
+      type: 'budget',
+      id: null,
+      itemName: 'Budget Amount'
+    });
+  };
+
   const handleEditSave = async (data: any, password: string) => {
     if (!editModal.item || !editModal.type) return;
 
@@ -170,31 +219,16 @@ function App() {
       const updated = await api.updateExpense(editModal.item.id, data, password);
       setExpenses(expenses.map(e => e.id === updated.id ? updated : e));
       setSuccessMessage('Expense updated successfully!');
+    } else if (editModal.type === 'budgetItem') {
+      const updated = await api.updateBudgetItem(editModal.item.id, data, password);
+      setBudgetItems(budgetItems.map(b => b.id === updated.id ? updated : b));
+      setSuccessMessage('Budget item updated successfully!');
     }
     setEditModal({ isOpen: false, type: null, item: null });
     setError(null);
     setTimeout(() => setSuccessMessage(null), 3000);
   };
 
-  const updateBudget = async (amount: number) => {
-    const password = prompt('Enter admin password to update budget:');
-    if (!password) return;
-
-    try {
-      const updated = await api.updateBudget(amount, password);
-      setBudget({ amount: updated.amount });
-      setSuccessMessage('Budget updated successfully!');
-      setTimeout(() => setSuccessMessage(null), 3000);
-    } catch (error: any) {
-      if (error.message === 'Invalid password') {
-        setError('Invalid password. Budget not updated.');
-      } else {
-        setError('Failed to update budget. Please try again.');
-      }
-      setTimeout(() => setError(null), 3000);
-      throw error;
-    }
-  };
 
   if (loading) {
     return (
@@ -285,7 +319,7 @@ function App() {
         <BudgetCard
           budgetAmount={budget.amount}
           totalContributions={contributions.reduce((sum, c) => sum + c.amount, 0)}
-          onUpdateBudget={updateBudget}
+          onEditClick={editBudgetAmount}
         />
 
         <div className="bg-white rounded-lg shadow-lg p-4 md:p-6 mb-4 md:mb-6">
@@ -322,6 +356,17 @@ function App() {
             >
               <TrendingDown className="w-4 h-4 md:w-5 md:h-5" />
               Expenses
+            </button>
+            <button
+              onClick={() => setActiveTab('budgetItems')}
+              className={`px-3 md:px-6 py-2 md:py-3 font-semibold transition-colors flex items-center gap-1 md:gap-2 text-sm md:text-base whitespace-nowrap ${
+                activeTab === 'budgetItems'
+                  ? 'text-purple-600 border-b-2 border-purple-600'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              <Wallet className="w-4 h-4 md:w-5 md:h-5" />
+              Budget Items
             </button>
           </div>
 
@@ -360,14 +405,28 @@ function App() {
               />
             </div>
           )}
+
+          {activeTab === 'budgetItems' && (
+            <div>
+              <BudgetItemForm onSubmit={addBudgetItem} />
+              <TransactionList
+                items={budgetItems}
+                type="budgetItem"
+                onDelete={deleteBudgetItem}
+                onEdit={editBudgetItem}
+              />
+            </div>
+          )}
         </div>
 
         <PasswordModal
           isOpen={passwordModal.isOpen}
           onClose={() => setPasswordModal({ isOpen: false, type: null, id: null, itemName: '' })}
           onConfirm={handlePasswordConfirm}
-          title="Delete Confirmation"
-          message={`Are you sure you want to delete ${passwordModal.itemName}? This action cannot be undone.`}
+          title={passwordModal.type === 'budget' ? 'Edit Budget' : 'Delete Confirmation'}
+          message={passwordModal.type === 'budget' 
+            ? `Enter password to update budget amount to KSh ${parseFloat(budgetEditValue || '0').toLocaleString()}`
+            : `Are you sure you want to delete ${passwordModal.itemName}? This action cannot be undone.`}
         />
 
         <EditModal

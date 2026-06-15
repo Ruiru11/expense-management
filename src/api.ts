@@ -5,6 +5,7 @@ export interface ApiData {
   promises: any[];
   expenses: any[];
   budget: { amount: number };
+  budgetItems: any[];
 }
 
 export const api = {
@@ -140,6 +141,44 @@ export const api = {
     if (!response.ok) {
       if (response.status === 401) throw new Error('Invalid password');
       throw new Error('Failed to update budget');
+    }
+    return response.json();
+  },
+
+  async addBudgetItem(budgetItem: any) {
+    const response = await fetch(`${API_BASE_URL}/budget-items`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(budgetItem),
+    });
+    if (!response.ok) throw new Error('Failed to add budget item');
+    return response.json();
+  },
+
+  async updateBudgetItem(id: string, budgetItem: any, password: string) {
+    const response = await fetch(`${API_BASE_URL}/budget-items/${id}`, {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        'x-admin-password': password 
+      },
+      body: JSON.stringify(budgetItem),
+    });
+    if (!response.ok) {
+      if (response.status === 401) throw new Error('Invalid password');
+      throw new Error('Failed to update budget item');
+    }
+    return response.json();
+  },
+
+  async deleteBudgetItem(id: string, password: string) {
+    const response = await fetch(`${API_BASE_URL}/budget-items/${id}`, {
+      method: 'DELETE',
+      headers: { 'x-admin-password': password },
+    });
+    if (!response.ok) {
+      if (response.status === 401) throw new Error('Invalid password');
+      throw new Error('Failed to delete budget item');
     }
     return response.json();
   },

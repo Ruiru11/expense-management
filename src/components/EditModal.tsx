@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { X, Lock, AlertCircle } from 'lucide-react';
-import { Contribution, Promise as PromiseType, Expense } from '../types';
+import { Contribution, Promise as PromiseType, Expense, BudgetItem } from '../types';
 
 interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (data: any, password: string) => Promise<void>;
-  item: Contribution | PromiseType | Expense | null;
-  type: 'contribution' | 'promise' | 'expense';
+  item: Contribution | PromiseType | Expense | BudgetItem | null;
+  type: 'contribution' | 'promise' | 'expense' | 'budgetItem';
 }
 
 export default function EditModal({ isOpen, onClose, onSave, item, type }: EditModalProps) {
@@ -53,7 +53,7 @@ export default function EditModal({ isOpen, onClose, onSave, item, type }: EditM
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-4 md:p-6 border-b sticky top-0 bg-white">
           <h3 className="text-base md:text-lg font-semibold text-gray-900">
-            Edit {type === 'contribution' ? 'Contribution' : type === 'promise' ? 'Promise' : 'Expense'}
+            Edit {type === 'contribution' ? 'Contribution' : type === 'promise' ? 'Promise' : type === 'budgetItem' ? 'Budget Item' : 'Expense'}
           </h3>
           <button
             onClick={onClose}
@@ -182,7 +182,7 @@ export default function EditModal({ isOpen, onClose, onSave, item, type }: EditM
               </>
             )}
 
-            {type === 'expense' && (
+            {(type === 'expense' || type === 'budgetItem') && (
               <>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -209,18 +209,20 @@ export default function EditModal({ isOpen, onClose, onSave, item, type }: EditM
                     required
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Date
-                  </label>
-                  <input
-                    type="date"
-                    value={formData.date || ''}
-                    onChange={(e) => handleChange('date', e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    required
-                  />
-                </div>
+                {type === 'expense' && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Date
+                    </label>
+                    <input
+                      type="date"
+                      value={formData.date || ''}
+                      onChange={(e) => handleChange('date', e.target.value)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      required
+                    />
+                  </div>
+                )}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Category (Optional)

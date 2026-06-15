@@ -38,6 +38,7 @@ app.get('/api/data', async (req, res) => {
     const contributions = await db.collection('contributions').find().toArray();
     const promises = await db.collection('promises').find().toArray();
     const expenses = await db.collection('expenses').find().toArray();
+    const budgetItems = await db.collection('budgetItems').find().toArray();
     
     // Get budget (single document)
     let budget = await db.collection('budget').findOne({});
@@ -51,6 +52,7 @@ app.get('/api/data', async (req, res) => {
       contributions: contributions.map(c => ({ ...c, id: c._id.toString(), _id: undefined })),
       promises: promises.map(p => ({ ...p, id: p._id.toString(), _id: undefined })),
       expenses: expenses.map(e => ({ ...e, id: e._id.toString(), _id: undefined })),
+      budgetItems: budgetItems.map(b => ({ ...b, id: b._id.toString(), _id: undefined })),
       budget: { amount: budget.amount }
     });
   } catch (error) {
@@ -210,6 +212,51 @@ app.put('/api/budget', verifyPassword, async (req, res) => {
   } catch (error) {
     console.error('Error updating budget:', error);
     res.status(500).json({ error: 'Failed to update budget' });
+  }
+});
+
+// Budget Items endpoints
+app.post('/api/budget-items', async (req, res) => {
+  try {
+    const db = await getDB();
+    const result = await db.collection('budgetItems').insertOne(req.body);
+    const newBudgetItem = { ...req.body, id: result.insertedId.toString() };
+    res.json(newBudgetItem);
+  } catch (error) {
+    console.error('Error adding budget item:', error);
+    res.status(500).json({ error: 'Failed to add budget item' });
+  }
+});
+
+app.put('/api/budget-items/:id', verifyPassword, async (req, res) => {
+  try {
+    const db = await getDB();
+    const { id, ...updateData } = req.body;
+    const result = await db.collection('budgetItems').findOneAndUpdate(
+      { _id: new ObjectId(req.params.id) },
+      { $set: updateData },
+      { returnDocument: 'after' }
+    );
+    
+    if (!result) {
+      return res.status(404).json({ error: 'Budget item not found' });
+    }
+    
+    res.json({ ...result, id: result._id.toString(), _id: undefined });
+  } catch (error) {
+    console.error('Error updating budget item:', error);
+    res.status(500).json({ error: 'Failed to update budget item' });
+  }
+});
+
+app.delete('/api/budget-items/:id', verifyPassword, async (req, res) => {
+  try {
+    const db = await getDB();
+    await db.collection('budgetItems').deleteOne({ _id: new ObjectId(req.params.id) });
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting budget item:', error);
+    res.status(500).json({ error: 'Failed to delete budget item' });
   }
 });
 
