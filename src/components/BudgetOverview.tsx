@@ -190,13 +190,13 @@ export default function BudgetOverview({ budgetItems, contributions, expenses }:
 
         <div className="bg-white rounded-lg p-6 shadow-md">
           <div className="text-center mb-4">
-            <p className="text-sm text-gray-600 mb-2">
+            <p className="text-xs sm:text-sm text-gray-600 mb-2">
               After covering all budget items with net balance:
             </p>
-            <p className={`text-5xl font-bold ${isDeficit ? 'text-red-600' : 'text-green-600'}`}>
+            <p className={`text-3xl sm:text-4xl md:text-5xl font-bold ${isDeficit ? 'text-red-600' : 'text-green-600'} break-words`}>
               {formatCurrency(Math.abs(ultimatePosition))}
             </p>
-            <p className="text-lg font-semibold text-gray-700 mt-2">
+            <p className="text-sm sm:text-base md:text-lg font-semibold text-gray-700 mt-2 px-2">
               {isDeficit ? 'DEFICIT - Additional funds needed' : 'SURPLUS - Extra funds available'}
             </p>
           </div>
@@ -205,15 +205,15 @@ export default function BudgetOverview({ budgetItems, contributions, expenses }:
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
               <div>
                 <p className="text-xs text-gray-500 mb-1">Net Balance</p>
-                <p className="text-lg font-bold text-blue-600">{formatCurrency(netBalance)}</p>
+                <p className="text-base sm:text-lg font-bold text-blue-600 break-words">{formatCurrency(netBalance)}</p>
               </div>
               <div>
                 <p className="text-xs text-gray-500 mb-1">Budget Balance</p>
-                <p className="text-lg font-bold text-orange-600">{formatCurrency(budgetBalance)}</p>
+                <p className="text-base sm:text-lg font-bold text-orange-600 break-words">{formatCurrency(budgetBalance)}</p>
               </div>
               <div>
                 <p className="text-xs text-gray-500 mb-1">Difference</p>
-                <p className={`text-lg font-bold ${isDeficit ? 'text-red-600' : 'text-green-600'}`}>
+                <p className={`text-base sm:text-lg font-bold break-words ${isDeficit ? 'text-red-600' : 'text-green-600'}`}>
                   {formatCurrency(ultimatePosition)}
                 </p>
               </div>
@@ -226,7 +226,7 @@ export default function BudgetOverview({ budgetItems, contributions, expenses }:
                 <AlertCircle className="w-5 h-5 text-red-600 mt-0.5" />
                 <div>
                   <p className="font-semibold text-red-800">Action Required</p>
-                  <p className="text-sm text-red-700 mt-1">
+                  <p className="text-xs sm:text-sm text-red-700 mt-1 break-words">
                     We need an additional {formatCurrency(Math.abs(ultimatePosition))} to cover all budget items after expenses.
                   </p>
                 </div>
@@ -240,7 +240,7 @@ export default function BudgetOverview({ budgetItems, contributions, expenses }:
                 <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
                 <div>
                   <p className="font-semibold text-green-800">Great News!</p>
-                  <p className="text-sm text-green-700 mt-1">
+                  <p className="text-xs sm:text-sm text-green-700 mt-1 break-words">
                     After covering all budget items and expenses, you'll have {formatCurrency(ultimatePosition)} remaining.
                   </p>
                 </div>
