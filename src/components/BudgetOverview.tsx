@@ -162,8 +162,8 @@ export default function BudgetOverview({ budgetItems, contributions, expenses }:
                 )}
                 <p className="text-xs text-gray-600">
                   {coverage >= 100 
-                    ? 'You have enough funds to cover all budget items'
-                    : `You can cover ${coverage.toFixed(1)}% of remaining budget items`
+                    ? 'We have enough funds to cover all budget items'
+                    : `We  can cover ${coverage.toFixed(1)}% of remaining budget items`
                   }
                 </p>
               </div>
@@ -227,7 +227,7 @@ export default function BudgetOverview({ budgetItems, contributions, expenses }:
                 <div>
                   <p className="font-semibold text-red-800">Action Required</p>
                   <p className="text-sm text-red-700 mt-1">
-                    You need an additional {formatCurrency(Math.abs(ultimatePosition))} to cover all budget items after expenses.
+                    We need an additional {formatCurrency(Math.abs(ultimatePosition))} to cover all budget items after expenses.
                   </p>
                 </div>
               </div>
