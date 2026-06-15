@@ -9,8 +9,8 @@ interface BudgetOverviewProps {
 
 export default function BudgetOverview({ budgetItems, contributions, expenses }: BudgetOverviewProps) {
   // Budget Items Calculations
-  const totalBudgetItems = budgetItems.reduce((sum, item) => sum + item.amount, 0);
-  const totalPaid = budgetItems.reduce((sum, item) => sum + item.amountPaid, 0);
+  const totalBudgetItems = budgetItems.reduce((sum, item) => sum + (item.amount || 0), 0);
+  const totalPaid = budgetItems.reduce((sum, item) => sum + (item.amountPaid || 0), 0);
   const budgetBalance = totalBudgetItems - totalPaid;
 
   // Financial Position
@@ -19,7 +19,7 @@ export default function BudgetOverview({ budgetItems, contributions, expenses }:
   const netBalance = moneyIn - moneyOut;
 
   // Coverage & Ultimate Position
-  const coverage = budgetBalance > 0 ? Math.min((netBalance / budgetBalance) * 100, 100) : 100;
+  const coverage = budgetBalance > 0 ? Math.min((netBalance / budgetBalance) * 100, 100) : (netBalance >= 0 ? 100 : 0);
   const ultimatePosition = netBalance - budgetBalance;
   const isDeficit = ultimatePosition < 0;
 
@@ -56,7 +56,7 @@ export default function BudgetOverview({ budgetItems, contributions, expenses }:
             <p className="text-sm text-gray-600 mb-1">Amount Paid</p>
             <p className="text-2xl font-bold text-green-700">{formatCurrency(totalPaid)}</p>
             <p className="text-xs text-gray-500 mt-1">
-              {totalBudgetItems > 0 ? ((totalPaid / totalBudgetItems) * 100).toFixed(1) : 0}% paid
+              {totalBudgetItems > 0 ? ((totalPaid / totalBudgetItems) * 100).toFixed(1) : '0.0'}% paid
             </p>
           </div>
           <div className="bg-orange-50 rounded-lg p-4 border-l-4 border-orange-500">
@@ -69,12 +69,12 @@ export default function BudgetOverview({ budgetItems, contributions, expenses }:
         <div className="mt-4">
           <div className="flex justify-between text-sm text-gray-600 mb-2">
             <span>Budget Payment Progress</span>
-            <span>{totalBudgetItems > 0 ? ((totalPaid / totalBudgetItems) * 100).toFixed(1) : 0}%</span>
+            <span>{totalBudgetItems > 0 ? ((totalPaid / totalBudgetItems) * 100).toFixed(1) : '0.0'}%</span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-3">
             <div
               className="bg-gradient-to-r from-purple-500 to-green-500 h-3 rounded-full transition-all"
-              style={{ width: `${totalBudgetItems > 0 ? (totalPaid / totalBudgetItems) * 100 : 0}%` }}
+              style={{ width: `${Math.min(totalBudgetItems > 0 ? (totalPaid / totalBudgetItems) * 100 : 0, 100)}%` }}
             />
           </div>
         </div>
