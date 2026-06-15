@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { DollarSign, TrendingUp, TrendingDown, Wallet, BarChart3 } from 'lucide-react';
-import { Contribution, Promise, Expense, Budget, BudgetItem } from './types';
+import { Contribution, Promise, Expense, BudgetItem } from './types';
 import ContributionForm from './components/ContributionForm';
 import PromiseForm from './components/PromiseForm';
 import ExpenseForm from './components/ExpenseForm';
@@ -17,14 +17,13 @@ function App() {
   const [promises, setPromises] = useState<Promise[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [budgetItems, setBudgetItems] = useState<BudgetItem[]>([]);
-  const [budget, setBudget] = useState<Budget>({ amount: 330766 });
   const [activeTab, setActiveTab] = useState<'contributions' | 'promises' | 'expenses' | 'budgetItems' | 'budgetOverview'>('contributions');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [passwordModal, setPasswordModal] = useState<{
     isOpen: boolean;
-    type: 'contribution' | 'promise' | 'expense' | 'budgetItem' | 'budget' | null;
+    type: 'contribution' | 'promise' | 'expense' | 'budgetItem' | null;
     id: string | null;
     itemName: string;
   }>({ isOpen: false, type: null, id: null, itemName: '' });
@@ -33,7 +32,6 @@ function App() {
     type: 'contribution' | 'promise' | 'expense' | 'budgetItem' | null;
     item: Contribution | Promise | Expense | BudgetItem | null;
   }>({ isOpen: false, type: null, item: null });
-  const [budgetEditValue, setBudgetEditValue] = useState<string>('');
 
   useEffect(() => {
     loadData();
@@ -47,7 +45,6 @@ function App() {
       setPromises(data.promises);
       setExpenses(data.expenses);
       setBudgetItems(data.budgetItems);
-      setBudget(data.budget);
       setError(null);
     } catch (err) {
       setError('Failed to load data. The backend server might be waking up (free tier). Please wait 30 seconds and refresh the page.');
@@ -156,10 +153,6 @@ function App() {
       await api.deleteBudgetItem(passwordModal.id, password);
       setBudgetItems(budgetItems.filter(b => b.id !== passwordModal.id));
       setSuccessMessage('Budget item deleted successfully!');
-    } else if (passwordModal.type === 'budget') {
-      await api.updateBudget(parseFloat(budgetEditValue), password);
-      setBudget({ amount: parseFloat(budgetEditValue) });
-      setSuccessMessage('Budget updated successfully!');
     }
     setPasswordModal({ isOpen: false, type: null, id: null, itemName: '' });
     setError(null);
@@ -192,16 +185,6 @@ function App() {
     if (item) {
       setEditModal({ isOpen: true, type: 'budgetItem', item });
     }
-  };
-
-  const editBudgetAmount = () => {
-    setBudgetEditValue(budget.amount.toString());
-    setPasswordModal({
-      isOpen: true,
-      type: 'budget',
-      id: null,
-      itemName: 'Budget Amount'
-    });
   };
 
   const handleEditSave = async (data: any, password: string) => {
@@ -436,10 +419,8 @@ function App() {
           isOpen={passwordModal.isOpen}
           onClose={() => setPasswordModal({ isOpen: false, type: null, id: null, itemName: '' })}
           onConfirm={handlePasswordConfirm}
-          title={passwordModal.type === 'budget' ? 'Edit Budget' : 'Delete Confirmation'}
-          message={passwordModal.type === 'budget' 
-            ? `Enter password to update budget amount to KSh ${parseFloat(budgetEditValue || '0').toLocaleString()}`
-            : `Are you sure you want to delete ${passwordModal.itemName}? This action cannot be undone.`}
+          title="Delete Confirmation"
+          message={`Are you sure you want to delete ${passwordModal.itemName}? This action cannot be undone.`}
         />
 
         <EditModal
