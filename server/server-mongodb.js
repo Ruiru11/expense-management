@@ -39,10 +39,19 @@ app.get('/api/data', async (req, res) => {
     const promises = await db.collection('promises').find().toArray();
     const expenses = await db.collection('expenses').find().toArray();
     
+    // Get budget (single document)
+    let budget = await db.collection('budget').findOne({});
+    if (!budget) {
+      // Initialize with default budget if not exists
+      budget = { amount: 330766 };
+      await db.collection('budget').insertOne(budget);
+    }
+    
     res.json({
       contributions: contributions.map(c => ({ ...c, id: c._id.toString(), _id: undefined })),
       promises: promises.map(p => ({ ...p, id: p._id.toString(), _id: undefined })),
-      expenses: expenses.map(e => ({ ...e, id: e._id.toString(), _id: undefined }))
+      expenses: expenses.map(e => ({ ...e, id: e._id.toString(), _id: undefined })),
+      budget: { amount: budget.amount }
     });
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -182,6 +191,25 @@ app.delete('/api/expenses/:id', verifyPassword, async (req, res) => {
   } catch (error) {
     console.error('Error deleting expense:', error);
     res.status(500).json({ error: 'Failed to delete expense' });
+  }
+});
+
+// Budget endpoint
+app.put('/api/budget', verifyPassword, async (req, res) => {
+  try {
+    const db = await getDB();
+    const { amount } = req.body;
+    
+    const result = await db.collection('budget').findOneAndUpdate(
+      {},
+      { $set: { amount } },
+      { upsert: true, returnDocument: 'after' }
+    );
+    
+    res.json({ amount: result.amount || amount });
+  } catch (error) {
+    console.error('Error updating budget:', error);
+    res.status(500).json({ error: 'Failed to update budget' });
   }
 });
 

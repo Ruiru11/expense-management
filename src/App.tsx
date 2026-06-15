@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { DollarSign, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
-import { Contribution, Promise, Expense } from './types';
+import { Contribution, Promise, Expense, Budget } from './types';
 import ContributionForm from './components/ContributionForm';
 import PromiseForm from './components/PromiseForm';
 import ExpenseForm from './components/ExpenseForm';
 import TransactionList from './components/TransactionList';
 import Summary from './components/Summary';
+import BudgetCard from './components/BudgetCard';
 import PasswordModal from './components/PasswordModal';
 import EditModal from './components/EditModal';
 import { api } from './api';
@@ -14,6 +15,7 @@ function App() {
   const [contributions, setContributions] = useState<Contribution[]>([]);
   const [promises, setPromises] = useState<Promise[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [budget, setBudget] = useState<Budget>({ amount: 330766 });
   const [activeTab, setActiveTab] = useState<'contributions' | 'promises' | 'expenses'>('contributions');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,6 +43,7 @@ function App() {
       setContributions(data.contributions);
       setPromises(data.promises);
       setExpenses(data.expenses);
+      setBudget(data.budget);
       setError(null);
     } catch (err) {
       setError('Failed to load data. The backend server might be waking up (free tier). Please wait 30 seconds and refresh the page.');
@@ -173,6 +176,26 @@ function App() {
     setTimeout(() => setSuccessMessage(null), 3000);
   };
 
+  const updateBudget = async (amount: number) => {
+    const password = prompt('Enter admin password to update budget:');
+    if (!password) return;
+
+    try {
+      const updated = await api.updateBudget(amount, password);
+      setBudget({ amount: updated.amount });
+      setSuccessMessage('Budget updated successfully!');
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (error: any) {
+      if (error.message === 'Invalid password') {
+        setError('Invalid password. Budget not updated.');
+      } else {
+        setError('Failed to update budget. Please try again.');
+      }
+      setTimeout(() => setError(null), 3000);
+      throw error;
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -257,6 +280,12 @@ function App() {
           contributions={contributions}
           promises={promises}
           expenses={expenses}
+        />
+
+        <BudgetCard
+          budgetAmount={budget.amount}
+          totalContributions={contributions.reduce((sum, c) => sum + c.amount, 0)}
+          onUpdateBudget={updateBudget}
         />
 
         <div className="bg-white rounded-lg shadow-lg p-4 md:p-6 mb-4 md:mb-6">

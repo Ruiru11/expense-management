@@ -24,4 +24,8 @@ export interface Expense {
   notes?: string;
 }
 
+export interface Budget {
+  amount: number;
+}
+
 export type TransactionType = 'contribution' | 'promise' | 'expense';

@@ -4,6 +4,7 @@ export interface ApiData {
   contributions: any[];
   promises: any[];
   expenses: any[];
+  budget: { amount: number };
 }
 
 export const api = {
@@ -123,6 +124,22 @@ export const api = {
     if (!response.ok) {
       if (response.status === 401) throw new Error('Invalid password');
       throw new Error('Failed to delete expense');
+    }
+    return response.json();
+  },
+
+  async updateBudget(amount: number, password: string) {
+    const response = await fetch(`${API_BASE_URL}/budget`, {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        'x-admin-password': password 
+      },
+      body: JSON.stringify({ amount }),
+    });
+    if (!response.ok) {
+      if (response.status === 401) throw new Error('Invalid password');
+      throw new Error('Failed to update budget');
     }
     return response.json();
   },
