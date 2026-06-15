@@ -7,7 +7,6 @@ import ExpenseForm from './components/ExpenseForm';
 import BudgetItemForm from './components/BudgetItemForm';
 import TransactionList from './components/TransactionList';
 import Summary from './components/Summary';
-import BudgetCard from './components/BudgetCard';
 import BudgetOverview from './components/BudgetOverview';
 import PasswordModal from './components/PasswordModal';
 import EditModal from './components/EditModal';
@@ -315,12 +314,6 @@ function App() {
           contributions={contributions}
           promises={promises}
           expenses={expenses}
-        />
-
-        <BudgetCard
-          budgetAmount={budget.amount}
-          totalContributions={contributions.reduce((sum, c) => sum + c.amount, 0)}
-          onEditClick={editBudgetAmount}
         />
 
         <div className="bg-white rounded-lg shadow-lg p-4 md:p-6 mb-4 md:mb-6">
