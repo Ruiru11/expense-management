@@ -38,7 +38,7 @@ export default function BudgetOverview({ budgetItems, contributions, expenses }:
           <Target className="w-8 h-8" />
           Budget Overview & Financial Position
         </h2>
-        <p className="text-purple-100">Complete analysis of your budget and financial health</p>
+        <p className="text-purple-100">Complete analysis of our budget and financial health</p>
       </div>
 
       {/* Budget Items Summary */}
