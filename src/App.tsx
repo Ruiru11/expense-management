@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { DollarSign, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
+import { DollarSign, TrendingUp, TrendingDown, Wallet, BarChart3 } from 'lucide-react';
 import { Contribution, Promise, Expense, Budget, BudgetItem } from './types';
 import ContributionForm from './components/ContributionForm';
 import PromiseForm from './components/PromiseForm';
@@ -8,6 +8,7 @@ import BudgetItemForm from './components/BudgetItemForm';
 import TransactionList from './components/TransactionList';
 import Summary from './components/Summary';
 import BudgetCard from './components/BudgetCard';
+import BudgetOverview from './components/BudgetOverview';
 import PasswordModal from './components/PasswordModal';
 import EditModal from './components/EditModal';
 import { api } from './api';
@@ -18,7 +19,7 @@ function App() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [budgetItems, setBudgetItems] = useState<BudgetItem[]>([]);
   const [budget, setBudget] = useState<Budget>({ amount: 330766 });
-  const [activeTab, setActiveTab] = useState<'contributions' | 'promises' | 'expenses' | 'budgetItems'>('contributions');
+  const [activeTab, setActiveTab] = useState<'contributions' | 'promises' | 'expenses' | 'budgetItems' | 'budgetOverview'>('contributions');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -368,6 +369,17 @@ function App() {
               <Wallet className="w-4 h-4 md:w-5 md:h-5" />
               Budget Items
             </button>
+            <button
+              onClick={() => setActiveTab('budgetOverview')}
+              className={`px-3 md:px-6 py-2 md:py-3 font-semibold transition-colors flex items-center gap-1 md:gap-2 text-sm md:text-base whitespace-nowrap ${
+                activeTab === 'budgetOverview'
+                  ? 'text-indigo-600 border-b-2 border-indigo-600'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              <BarChart3 className="w-4 h-4 md:w-5 md:h-5" />
+              Budget Overview
+            </button>
           </div>
 
           {activeTab === 'contributions' && (
@@ -416,6 +428,14 @@ function App() {
                 onEdit={editBudgetItem}
               />
             </div>
+          )}
+
+          {activeTab === 'budgetOverview' && (
+            <BudgetOverview
+              budgetItems={budgetItems}
+              contributions={contributions}
+              expenses={expenses}
+            />
           )}
         </div>
 
