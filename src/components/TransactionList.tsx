@@ -79,6 +79,37 @@ export default function TransactionList({ items, type, onDelete, onEdit }: Trans
                   </div>
                 )}
               </div>
+              {type === 'budgetItem' && 'amountPaid' in item && (
+                <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div>
+                      <span className="text-gray-600">Paid:</span>
+                      <span className="ml-2 font-semibold text-green-600">{formatCurrency(item.amountPaid)}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Balance:</span>
+                      <span className="ml-2 font-semibold text-red-600">{formatCurrency(item.amount - item.amountPaid)}</span>
+                    </div>
+                  </div>
+                  <div className="mt-2">
+                    <div className="flex justify-between text-xs text-gray-600 mb-1">
+                      <span>Payment Progress</span>
+                      <span>{((item.amountPaid / item.amount) * 100).toFixed(1)}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className={`h-2 rounded-full transition-all ${
+                          item.amountPaid >= item.amount ? 'bg-green-500' : 'bg-yellow-500'
+                        }`}
+                        style={{ width: `${Math.min((item.amountPaid / item.amount) * 100, 100)}%` }}
+                      />
+                    </div>
+                    {item.amountPaid >= item.amount && (
+                      <p className="mt-1 text-xs font-semibold text-green-600">✓ Fully Paid</p>
+                    )}
+                  </div>
+                </div>
+              )}
               {item.notes && (
                 <p className="mt-2 text-sm text-gray-600 italic">{item.notes}</p>
               )}

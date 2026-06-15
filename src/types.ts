@@ -32,6 +32,7 @@ export interface BudgetItem {
   id: string;
   description: string;
   amount: number;
+  amountPaid: number;
   category?: string;
   notes?: string;
 }

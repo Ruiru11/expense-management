@@ -10,6 +10,7 @@ export default function BudgetItemForm({ onSubmit }: BudgetItemFormProps) {
   const [formData, setFormData] = useState({
     description: '',
     amount: '',
+    amountPaid: '',
     category: '',
     notes: '',
   });
@@ -19,10 +20,11 @@ export default function BudgetItemForm({ onSubmit }: BudgetItemFormProps) {
     onSubmit({
       description: formData.description,
       amount: parseFloat(formData.amount),
+      amountPaid: parseFloat(formData.amountPaid) || 0,
       category: formData.category || undefined,
       notes: formData.notes || undefined,
     });
-    setFormData({ description: '', amount: '', category: '', notes: '' });
+    setFormData({ description: '', amount: '', amountPaid: '', category: '', notes: '' });
   };
 
   return (
@@ -58,6 +60,20 @@ export default function BudgetItemForm({ onSubmit }: BudgetItemFormProps) {
             className="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm md:text-base"
             placeholder="0.00"
             required
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Amount Paid (KSh)
+          </label>
+          <input
+            type="number"
+            step="0.01"
+            value={formData.amountPaid}
+            onChange={(e) => setFormData({ ...formData, amountPaid: e.target.value })}
+            className="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm md:text-base"
+            placeholder="0.00"
           />
         </div>
 

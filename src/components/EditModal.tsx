@@ -209,6 +209,20 @@ export default function EditModal({ isOpen, onClose, onSave, item, type }: EditM
                     required
                   />
                 </div>
+                {type === 'budgetItem' && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Amount Paid
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={formData.amountPaid || 0}
+                      onChange={(e) => handleChange('amountPaid', parseFloat(e.target.value) || 0)}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+                )}
                 {type === 'expense' && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
