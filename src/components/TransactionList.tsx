@@ -1,9 +1,9 @@
 import { Trash2, Calendar, FileText, Edit } from 'lucide-react';
 import { format } from 'date-fns';
-import { Contribution, Promise, Expense, TransactionType } from '../types';
+import { Contribution, Promise, Expense, BudgetItem, TransactionType } from '../types';
 
 interface TransactionListProps {
-  items: Contribution[] | Promise[] | Expense[];
+  items: Contribution[] | Promise[] | Expense[] | BudgetItem[];
   type: TransactionType;
   onDelete: (id: string) => void;
   onEdit: (id: string) => void;
@@ -60,17 +60,19 @@ export default function TransactionList({ items, type, onDelete, onEdit }: Trans
                 </span>
               </div>
               <div className="flex flex-wrap gap-4 text-sm text-gray-600">
-                <div className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  <span>{format(new Date(item.date), 'MMM dd, yyyy')}</span>
-                </div>
+                {'date' in item && item.date && (
+                  <div className="flex items-center gap-1">
+                    <Calendar className="w-4 h-4" />
+                    <span>{format(new Date(item.date), 'MMM dd, yyyy')}</span>
+                  </div>
+                )}
                 {type === 'promise' && 'dueDate' in item && item.dueDate && (
                   <div className="flex items-center gap-1 text-blue-700">
                     <Calendar className="w-4 h-4" />
                     <span>Due: {format(new Date(item.dueDate), 'MMM dd, yyyy')}</span>
                   </div>
                 )}
-                {type === 'expense' && 'category' in item && item.category && (
+                {(type === 'expense' || type === 'budgetItem') && 'category' in item && item.category && (
                   <div className="flex items-center gap-1">
                     <FileText className="w-4 h-4" />
                     <span>{item.category}</span>
